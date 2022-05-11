@@ -1,0 +1,20 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+
+.splash {
+	height: 100vh;
+}
+
+.splash > div.brand {
+	background-image: url('/images/unsplash.jpg');
+	background-size: cover;
+}

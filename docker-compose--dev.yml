@@ -1,0 +1,79 @@
+version: "3.6"
+
+services:
+  web:
+    image: ambientum/php:8.0-nginx
+    restart: unless-stopped
+    volumes:
+      - ./webapp/:/var/www/app
+    # ports:
+      # - 80:8000
+    environment:
+      - FRAMEWORK=laravel
+      - XDEBUG_ENABLED=false
+      - OPCACHE_MODE=normal
+      - PHP_MEMORY_LIMIT=256M
+      - LANG=pt_BR.UTF-8
+      - TZ=America/Fortaleza
+    links:
+      - db
+    networks:
+      - default
+      # - proxymng
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=thecomm
+      - POSTGRES_PASSWORD=thecomm
+      - POSTGRES_DB=thecomm
+      - PGDATA=./pgdata
+      - TZ=America/Fortaleza
+
+  jobs:
+    image: evaldobarbosa/larajob:php8.0
+    restart: unless-stopped
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+      - LANG=pt_BR.UTF-8
+      - TZ=America/Fortaleza
+    volumes:
+      - ./webapp/:/var/www/app
+    depends_on:
+      - web
+
+  queue:
+    image: ambientum/php:8.0-nginx-mssql
+    restart: unless-stopped
+    command: php artisan queue:work --tries=5 --sleep=5
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+      - LANG=pt_BR.UTF-8
+      - TZ=America/Fortaleza
+    volumes:
+      - ./webapp/:/var/www/app
+    depends_on:
+      - web
+    links:
+      - db
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=evaldobarbosa@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=teste123
+      - PGADMIN_LISTEN_PORT=5050
+    depends_on:
+      - db
+    networks:
+      - default
+      # - proxymng
+
+networks:
+  default:
+    driver: bridge
+  proxmng:
+    external: true
