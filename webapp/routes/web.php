@@ -23,7 +23,8 @@ Route::get('/importacao', function () {
 
 
 Route::post('/importacao', function (\Illuminate\Http\Request $request) {
-    $file = $request->file('mycsv')->store('csv');
+    $file = $request->file('mycsv')->storeAs('csv', $request->file('mycsv')->getClientOriginalName());
+
 
     return redirect()->to('home')
         ->with('success', 'Você será informado quando o arquivo for processado')
