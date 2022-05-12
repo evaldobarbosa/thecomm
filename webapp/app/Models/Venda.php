@@ -16,6 +16,18 @@ class Venda extends Model
      */
     protected $fillable = ['preco', 'descricao', 'quantidade', 'endereco',];
 
+    public function vincularImportacao(Importacao $importacao)
+    {
+        if ((int)$this->id == 0) {
+            throw new \Exception('Salve primeiro o registro da venda para vinculá-lo à importação');
+        }
+
+        $vi = VendasImportacao::make();
+        $vi->venda()->associate($this);
+        $vi->importacao()->associate($importacao);
+        $vi->save();
+    }
+
     /**
      * Venda belongs to Fornecedor.
      *
@@ -36,5 +48,23 @@ class Venda extends Model
     {
         // belongsTo(RelatedModel, foreignKey = comprador_id, keyOnRelatedModel = id)
         return $this->belongsTo(User::class, 'comprador_id');
+    }
+
+    /**
+     * Venda belongs to Importacao.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function importacao()
+    {
+        // belongsTo(RelatedModel, foreignKey = importacao_id, keyOnRelatedModel = id)
+        return $this->hasOneThrough(
+            Importacao::class,
+            VendasImportacao::class,
+            'importacao_id',
+            'id',
+            'id',
+            'venda_id'
+        );
     }
 }

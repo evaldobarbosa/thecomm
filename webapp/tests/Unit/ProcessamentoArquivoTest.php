@@ -26,6 +26,7 @@ class ProcessamentoArquivoTest extends TestCase
 
         $this->assertEquals(4, \App\Models\Venda::count());
         $this->assertEquals('João Silva', \App\Models\Venda::first()->comprador->name);
+        $this->assertEquals('dados.txt', \App\Models\Venda::first()->importacao->arquivo);
     }
 
     public function test_erro_ao_processar_colunas_erradas()

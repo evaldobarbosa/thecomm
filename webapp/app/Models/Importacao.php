@@ -10,6 +10,13 @@ class Importacao extends Model
     use HasFactory;
 
     /**
+     * The database table used by the model.
+     *
+     * @var string
+     */
+    protected $table = 'importacoes';
+
+    /**
      * Fields that can be mass assigned.
      *
      * @var array

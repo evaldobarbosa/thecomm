@@ -5,6 +5,7 @@ use App\Models\Venda;
 use \App\Models\User;
 use App\Exceptions\CSV\InvalidHeaderException;
 use App\Exceptions\CSV\InterruptedImportingException;
+use SplFileInfo;
 
 class ImportacaoVendas
 {
@@ -14,8 +15,9 @@ class ImportacaoVendas
 	{
 		\DB::transaction(function () use ($csv) {
 
-			$imp = \App\Models\Importacao::create([
-				'arquivo' => $csv,
+			$importacao = \App\Models\Importacao::create([
+				'arquivo' => (new SplFileInfo($csv))->getFilename(),
+				'importado_em' => now(),
 			]);
 
 			$reader = new CSVReader($csv, "\t");
@@ -39,6 +41,8 @@ class ImportacaoVendas
 					'quantidade' => $row[3],
 					'endereco' => $row[4],
 				]);
+
+				$venda->vincularImportacao($importacao);
 			}
 
 		});
