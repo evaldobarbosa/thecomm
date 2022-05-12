@@ -22,8 +22,12 @@ Route::get('/importacao', function () {
 })->name('importacao.selecionar');
 
 
-Route::post('/importacao', function () {
-    return view('importacao.selecionar');
+Route::post('/importacao', function (\Illuminate\Http\Request $request) {
+    $file = $request->file('mycsv')->store('csv');
+
+    return redirect()->to('home')
+        ->with('success', 'Você será informado quando o arquivo for processado')
+        ->with('success-title', 'Upload realizado');
 })->name('importacao.enviar');
 
 Auth::routes();

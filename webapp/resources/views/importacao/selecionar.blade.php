@@ -13,13 +13,14 @@
 
         <div class="col-md-8 mt-4">
 
-            <form method="POST" action="{{route('importacao.enviar')}}">
+            <form method="POST" action="{{route('importacao.enviar')}}" enctype="multipart/form-data">
+                @csrf
 
                 <div class="d-grid mb-3">
 
-                    <button type="button" class="btn btn-outline-secondary py-5 d-flex flex-column align-items-center">
+                    <button id="btn-send-csv" type="button" class="btn btn-outline-secondary py-5 d-flex flex-column align-items-center">
                         <i class="fa-solid fa-file-arrow-up fa-3x"></i>
-                        <span class="py-2 px-3 rounded mt-3 bg-dark text-light">Selecionar arquivo</span>
+                        <span id="btn-send-csv-label" class="py-2 px-3 rounded mt-3 bg-dark text-light">Selecionar arquivo</span>
                     </button>
 
                     <input type="file" name="mycsv" id="mycsv" accept="text/csv" class="invisible">

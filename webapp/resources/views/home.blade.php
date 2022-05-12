@@ -12,8 +12,8 @@
         <div class="col-md-8">
             <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-start" role="alert">
                 <div class="flex-fill">
-                    <h5>{{ session('success-title') ?? 'Upload realizado' }}</h5>
-                    {{ session('success') ?? 'Você será informado quando o arquivo for processado' }}
+                    <h5 id="success-title">{{ session('success-title') ?? 'Sucesso' }}</h5>
+                    <span id="success-message">{{ session('success') }}</span>
                 </div>
 
                 <div class="bg-dark">
@@ -29,20 +29,20 @@
         <div class="col-md-8 mt-4">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <h5>Arquivo XYZ</h5>
-                    <span>10-02-2022 10:00</span>
+                    <h5 id="file-ttl-0001">Arquivo XYZ</h5>
+                    <span id="file-desc-0001">Importado em 10/02/2022 10:01</span>
                 </li>
                 <li class="list-group-item">
-                    <h5>Arquivo XYZ</h5>
-                    <span>10-02-2022 10:00</span>
+                    <h5 id="file-ttl-0002">Arquivo XYZ</h5>
+                    <span id="file-desc-0002">Importado em 10/02/2022 10:01</span>
                 </li>
                 <li class="list-group-item">
-                    <h5>Arquivo XYZ</h5>
-                    <span>10-02-2022 10:00</span>
+                    <h5 id="file-ttl-0003">Arquivo XYZ</h5>
+                    <span id="file-desc-0003">Importado em 10/02/2022 10:01</span>
                 </li>
                 <li class="list-group-item">
-                    <h5>Arquivo XYZ</h5>
-                    <span>10-02-2022 10:00</span>
+                    <h5 id="file-ttl-0004">Arquivo XYZ</h5>
+                    <span id="file-desc-0004">Importado em 10/02/2022 10:01</span>
                 </li>
             </ul>
         </div>
