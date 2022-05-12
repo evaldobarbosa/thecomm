@@ -5,8 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use Illuminate\Http\File;
-// use Illuminate\Http\Testing\File;
+use Illuminate\Http\Testing\File as FakeFile;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,9 +42,11 @@ class EnviarArquivoCSVTest extends TestCase
             'email' => 'evaldo@mrlucky.com.br',
         ]);
 
-        $csv = new File('/tmp/teste.csv', 1000, 'text/csv');
+        // $csv = new File('/tmp/teste.csv', 1000, 'text/csv');
 
         Storage::fake('csv');
+
+        $csv = FakeFile::fake()->create('/tmp/teste.csv', 1000, 'text/csv');
         
         $request = $this->actingAs($user)
             ->visitRoute("importacao.selecionar")
