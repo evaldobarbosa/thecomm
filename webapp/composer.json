@@ -47,6 +47,11 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "renew": [
+            "@php artisan migrate:refresh",
+            "@php artisan db:seed",
+            "@php artisan db:seed --class=DadosTestesAutomaticos"
         ]
     },
     "extra": {

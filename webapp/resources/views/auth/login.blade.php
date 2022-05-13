@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-10">
+        <div class="col-md-4 col-10">
             <h5>TheComm</h5>
             <h1 class="display-4 mb-4">{{__('Login')}}</h1>
 
@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-8 offset-md-4">
+                            <div class="col-12">
                                 <div class="d-grid gap-3">
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Login') }}
