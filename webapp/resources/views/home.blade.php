@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8 d-flex align-items-center">
             <h1 class="pt-2 flex-fill">{{ __('Importações') }}</h1>
-            <a href="{{route('importacao.selecionar')}}" class="btn btn-outline-secondary btn-sm">Novo</a>
+            <a href="{{route('importacao.selecionar')}}" class="btn btn-outline-secondary btn-sm">{{ __('Novo') }}</a>
         </div>
 
         @if (session('success'))
@@ -24,26 +24,32 @@
             </div>
         </div>
         @endif
+        
+        @if(Session::has('errors') and $errors->any())
+        <div class="alert alert-danger">
+            <h3>Um erro aconteceu!</h3>
+            {{-- Ajuste para mostrar todos os erros de uma vez --}}
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </div>
+        @endif
+
 
 
         <div class="col-md-8 mt-4">
             <ul class="list-group">
+                @forelse($lista as $item)
                 <li class="list-group-item">
-                    <h5 id="file-ttl-0001">Arquivo XYZ</h5>
-                    <span id="file-desc-0001">Importado em 10/02/2022 10:01</span>
+                    <h5 id="file-ttl-{{$item->id5()}}">{{$item->arquivo}}</h5>
+                    <span id="file-desc-{{$item->id5()}}">Importado em {{$item->importado_em->format('d/m/Y H:i')}}</span><br>
+                    <span id="file-qtd-{{$item->id5()}}">{{$item->vendas->count()}} registros</span>
                 </li>
+                @empty
                 <li class="list-group-item">
-                    <h5 id="file-ttl-0002">Arquivo XYZ</h5>
-                    <span id="file-desc-0002">Importado em 10/02/2022 10:01</span>
+                    Sem importações ainda
                 </li>
-                <li class="list-group-item">
-                    <h5 id="file-ttl-0003">Arquivo XYZ</h5>
-                    <span id="file-desc-0003">Importado em 10/02/2022 10:01</span>
-                </li>
-                <li class="list-group-item">
-                    <h5 id="file-ttl-0004">Arquivo XYZ</h5>
-                    <span id="file-desc-0004">Importado em 10/02/2022 10:01</span>
-                </li>
+                @endforelse
             </ul>
         </div>
     </div>

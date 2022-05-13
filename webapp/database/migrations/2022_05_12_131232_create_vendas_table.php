@@ -57,14 +57,14 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('vendas_importacoes');
+        Schema::dropIfExists('vendas');
+        Schema::dropIfExists('importacoes');
+
         if (Schema::hasColumn('users', 'tipo')) {
             Schema::table('users', function (Blueprint $table) {
                 $table->dropColumn('tipo');
             });
         }
-
-        Schema::dropIfExists('vendas_importacoes');
-        Schema::dropIfExists('vendas');
-        Schema::dropIfExists('importacoes');
     }
 };

@@ -20,6 +20,8 @@ class EnviarArquivoCSVTest extends TestCase
      */
     public function test_acessar_form_pela_home()
     {
+        $this->artisan('db:seed', ['--class' => 'DadosTestesAutomaticos']);
+
         $user = \App\Models\User::factory()->create([
             'name' => 'Evaldo',
             'email' => 'evaldo@mrlucky.com.br',
@@ -28,8 +30,9 @@ class EnviarArquivoCSVTest extends TestCase
         $this->actingAs($user)
             ->visitRoute("home")
             ->see("Importações")
-            ->seeInElement("#file-ttl-0001", "Arquivo XYZ")
-            ->seeInElement("#file-desc-0001", "Importado em 10/02/2022 10:01")
+            ->seeInElement("#file-ttl-00003", "Arquivo XYZ")
+            ->seeInElement("#file-desc-00003", "Importado em 10/02/2022 10:01")
+            ->seeInElement("#file-qtd-00003", "7")
             ->click('Novo')
             ->seeInElement("#btn-send-csv-label", "Selecionar arquivo");
 
@@ -37,16 +40,17 @@ class EnviarArquivoCSVTest extends TestCase
 
     public function test_enviar_csv_com_sucesso()
     {
+        $this->artisan('db:seed', ['--class' => 'DadosTestesAutomaticos']);
+
         $user = \App\Models\User::factory()->create([
             'name' => 'Evaldo',
             'email' => 'evaldo@mrlucky.com.br',
         ]);
 
-        // $csv = new File('/tmp/teste.csv', 1000, 'text/csv');
+        $disco = Storage::fake('csv');
 
-        Storage::fake('csv');
-
-        $csv = FakeFile::fake()->create('/tmp/teste.csv', 1000, 'text/csv');
+        $content = file_get_contents( realpath(__DIR__ . "/../fixtures/dados.txt") );
+        $csv = FakeFile::fake()->createWithContent('/tmp/teste.csv', $content);
         
         $request = $this->actingAs($user)
             ->visitRoute("importacao.selecionar")
@@ -55,6 +59,12 @@ class EnviarArquivoCSVTest extends TestCase
             ->seeInElement('#success-title', 'Upload realizado')
             ->seeInElement('#success-message', 'Você será informado quando o arquivo for processado');
 
-        Storage::assertExists('csv/teste.csv');
+        $ex = explode("/", $csv->getPathname());
+        $file = end($ex);
+
+        $this->actingAs($user)
+            ->visitRoute("home")
+            ->seeInElement("#file-ttl-00004", $file)
+            ->seeInElement("#file-qtd-00004", "4 registros");
     }
 }
