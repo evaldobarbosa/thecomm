@@ -9,12 +9,12 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.11",
         "laravel/sanctum": "^2.14.1",
+        "fakerphp/faker": "^1.9.1",
         "laravel/tinker": "^2.7",
         "laravel/ui": "^3.4"
     },
     "require-dev": {
         "doctrine/dbal": "^3.3",
-        "fakerphp/faker": "^1.9.1",
         "laravel/browser-kit-testing": "^6.3",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
@@ -50,7 +50,15 @@
         ],
         "renew": [
             "@php artisan migrate:refresh",
-            "@php artisan db:seed",
+            "@php artisan db:seed"
+        ],
+        "prodenv": [
+            "export APP_ENV=production",
+            "export APP_DEBUG=false",
+            "@php artisan config:cache"
+        ],
+        "testdata": [
+            "composer renew",
             "@php artisan db:seed --class=DadosTestesAutomaticos"
         ]
     },

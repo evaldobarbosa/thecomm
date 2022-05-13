@@ -13,3 +13,4 @@ yarn-error.log
 /.idea
 /.vscode
 public/images/unsplash_original.jpg
+./id_rsa

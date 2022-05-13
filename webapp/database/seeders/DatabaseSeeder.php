@@ -16,10 +16,11 @@ class DatabaseSeeder extends Seeder
     {
 
         if (config('app.env') == 'local') {
-            \App\Models\User::factory()->create([
+            \App\Models\User::create([
                 'name' => 'Evaldo Barbosa',
                 'email' => 'evaldobarbosa@gmail.com',
-                'password' => bcrypt('teste123')
+                'password' => bcrypt('teste123'),
+                'tipo' => 'usuario',
             ]);
         }
         // \App\Models\User::factory(10)->create();

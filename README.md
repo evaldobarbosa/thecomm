@@ -47,7 +47,7 @@ docker-compose -f docker-compose--dev.yml up -d
 - Produção
 
 ```
-docker-compose -f docker-compose--dev.yml up -d
+docker-compose up -d
 ```
 
 ### Rodando migrations e testes
@@ -55,13 +55,13 @@ docker-compose -f docker-compose--dev.yml up -d
 - Rodando migrations
 
 ```
-docker-compose exec thecomm_web_1 composer renew
+docker exec thecomm_web_1 composer renew && composer setprod
 ```
 
-- Rodando os testes
+- Rodando os testes (disponível somente em ambiente de testes/homologação)
 
 ```
-docker-compose exec thecomm_web_1 php artisan test
+docker exec thecomm_web_1 php artisan test
 ```
 
 ### Proxy reverso
@@ -72,3 +72,13 @@ Utilizado em ambiente de desenvolvimento o Nginx Proxy Manager. Para a configura
 - scheme: http
 - Forward Hostname / IP: thecomm_web_1
 - Forward Port: 8080
+
+#### Network
+
+Criar a rede proxymng
+
+```
+docker network create proxymng
+```
+
+E adicionar essa rede às redes conhecidas pelo serviço 'web' existente no docker-compose.yml
