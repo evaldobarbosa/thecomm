@@ -53,7 +53,7 @@
                         <div class="row mb-3">
                             <div class="col-12">
                                 <div class="d-grid gap-3">
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-dark">
                                         {{ __('Login') }}
                                     </button>
 

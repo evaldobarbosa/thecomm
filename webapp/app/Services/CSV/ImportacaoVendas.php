@@ -4,23 +4,28 @@ namespace App\Services\CSV;
 use App\Models\Venda;
 use \App\Models\User;
 use App\Exceptions\CSV\InvalidHeaderException;
-use App\Exceptions\CSV\InterruptedImportingException;
 use SplFileInfo;
+use Illuminate\Support\Facades\Storage;
 
 class ImportacaoVendas
 {
 	// private string $csv;
 	
-	public function processar($csv)
+	public function processar($hash)
 	{
-		\DB::transaction(function () use ($csv) {
+		\DB::transaction(function () use ($hash) {
+			\Log::info($hash);
+			\Log::info(hash('sha1', $hash));
 
-			$importacao = \App\Models\Importacao::create([
-				'arquivo' => (new SplFileInfo($csv))->getFilename(),
-				'importado_em' => now(),
-			]);
+			// $importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
+			$importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
 
-			$reader = new CSVReader($csv, "\t");
+			$reader = new CSVReader(
+				Storage::path(
+					sprintf('csv/%s.csv', $importacao->hash)
+				),
+				"\t"
+			);
 			foreach($reader->rows() as $key => $row) {
 				if ($key == 0) {
 					if (!$this->validarCabecalho($row)) {
@@ -45,7 +50,42 @@ class ImportacaoVendas
 				$venda->vincularImportacao($importacao);
 			}
 
+			\Log::info("Arquivo {$importacao->arquivo} importado");
 		});
+	}
+
+	public function novoArquivo($csv)
+	{
+		\DB::beginTransaction();
+
+		try {
+			$importacao = \App\Models\Importacao::create([
+				'arquivo' => (new SplFileInfo($csv))->getFilename(),
+				'importado_em' => now(),
+				'hash' => hash('sha1', $csv),
+			]);
+
+			Storage::move(
+				"csv/" . (new SplFileInfo($csv))->getFilename(),
+				"csv/" . hash('sha1', $csv) . ".csv"
+			);
+
+			\DB::commit();
+
+			return hash('sha1', $csv);
+		} catch (\Exception $e) {
+			\DB::rollback();
+
+			\Log::error("Problema ao movimentar arquivo {$csv} para hash");
+
+			throw new \InvalidArgumentException("Tivemos uma falha no armazenamento do arquivo. Tente novamente mais tarde", 1);
+			
+		}
+	}
+
+	public static function verificarDuplicacao(string $csv):bool
+	{
+		return \App\Models\Importacao::where('hash', hash('sha1', $csv))->exists();
 	}
 
 	public function buscaFornecedor($nome)

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8 d-flex align-items-center">
@@ -26,12 +27,16 @@
         @endif
         
         @if(Session::has('errors') and $errors->any())
-        <div class="alert alert-danger">
-            <h3>Um erro aconteceu!</h3>
-            {{-- Ajuste para mostrar todos os erros de uma vez --}}
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
+        <div class="col-md-8">
+            <div class="alert alert-danger">
+                <h5 class="border border-bottom">Um erro aconteceu!</h5>
+                {{-- Ajuste para mostrar todos os erros de uma vez --}}
+                <ul class="list-unstyled">
+                @foreach ($errors->all() as $error)
+                <li>- {{ $error }}</li>
+                @endforeach
+                </ul>
+            </div>
         </div>
         @endif
 
@@ -43,7 +48,11 @@
                 <li class="list-group-item">
                     <h5 id="file-ttl-{{$item->id5()}}">{{$item->arquivo}}</h5>
                     <span id="file-desc-{{$item->id5()}}">Importado em {{$item->importado_em->format('d/m/Y H:i')}}</span><br>
+                    @if ($item->vendas->count() > 0)
                     <span id="file-qtd-{{$item->id5()}}">{{$item->vendas->count()}} registros</span>
+                    @else
+                    <span id="file-qtd-{{$item->id5()}}">pendente</span>
+                    @endif
                 </li>
                 @empty
                 <li class="list-group-item">

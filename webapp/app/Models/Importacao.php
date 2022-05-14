@@ -21,7 +21,7 @@ class Importacao extends Model
      *
      * @var array
      */
-    protected $fillable = ['arquivo', 'importado_em'];
+    protected $fillable = ['arquivo', 'importado_em', 'hash'];
 
     protected $casts = [
         'importado_em' => 'datetime',

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Importacoes;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\ImportarCSV as Request;
+use App\Events\ArquivoCSVRecebido;
+use App\Exceptions\CSV\InterruptedImportingException;
 
 class Processamento extends Controller
 {
@@ -20,17 +22,20 @@ class Processamento extends Controller
             $request->file('mycsv')->storeAs('csv', $request->file('mycsv')->getClientOriginalName());
             $csv = Storage::path("csv/" . $request->file('mycsv')->getClientOriginalName());
 
-            $importacao = new \App\Services\CSV\ImportacaoVendas;
-            $importacao->processar($csv);
+            if (\App\Services\CSV\ImportacaoVendas::verificarDuplicacao($csv)) {
+                throw new InterruptedImportingException('O arquivo enviado já foi processado anteriormente');
+            }
+
+            event(new ArquivoCSVRecebido($csv));
 
             return redirect()->to('home')
-                ->with('success', 'Você será informado quando o arquivo for processado')
-                ->with('success-title', 'Upload realizado');
+            ->with('success', 'Você será informado quando o arquivo for processado')
+            ->with('success-title', 'Upload realizado');
         } catch (\Exception $e) {
+            \Log::error('Problema ao receber o arquivo: ' . $e->getMessage());
 
-            //dd($e->getMessage());
             return redirect()->to('home')
-                ->withErros([$e->getMessage()]);   
+            ->withErrors([$e->getMessage()]);   
         }
     }
 }
