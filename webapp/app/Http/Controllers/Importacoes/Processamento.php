@@ -10,6 +10,11 @@ use App\Exceptions\CSV\InterruptedImportingException;
 
 class Processamento extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Handle the incoming request.
      *
@@ -26,7 +31,7 @@ class Processamento extends Controller
                 throw new InterruptedImportingException('O arquivo enviado já foi processado anteriormente');
             }
 
-            event(new ArquivoCSVRecebido($csv));
+            event(new ArquivoCSVRecebido($csv, auth()->id()));
 
             return redirect()->to('home')
             ->with('success', 'Você será informado quando o arquivo for processado')

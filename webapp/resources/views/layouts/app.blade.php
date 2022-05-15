@@ -49,5 +49,7 @@
             </main>
         </div>
     </body>
+
+    <script src="js/app.js"></script>
     @yield('scripts')
     </html>

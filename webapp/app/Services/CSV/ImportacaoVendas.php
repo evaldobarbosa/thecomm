@@ -8,16 +8,10 @@ use SplFileInfo;
 use Illuminate\Support\Facades\Storage;
 
 class ImportacaoVendas
-{
-	// private string $csv;
-	
+{	
 	public function processar($hash)
 	{
 		\DB::transaction(function () use ($hash) {
-			\Log::info($hash);
-			\Log::info(hash('sha1', $hash));
-
-			// $importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
 			$importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
 
 			$reader = new CSVReader(

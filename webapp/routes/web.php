@@ -21,10 +21,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', \App\Http\Controllers\Importacoes\Lista::class)->name('home');
+Route::middleware('auth')->group(function() {
+    Route::get('/home', \App\Http\Controllers\Importacoes\Lista::class)->name('home');
 
-Route::get('/importacao', function () {
-    return view('importacao.selecionar');
-})->name('importacao.selecionar');
+    Route::get('/importacao', function () {
+        return view('importacao.selecionar');
+    })->name('importacao.selecionar');
 
-Route::post('/importacao', \App\Http\Controllers\Importacoes\Processamento::class)->name('importacao.enviar');
+    Route::post('/importacao', \App\Http\Controllers\Importacoes\Processamento::class)->name('importacao.enviar');
+});

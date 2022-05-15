@@ -6,6 +6,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./webapp/:/var/www/app
+      - ./ssl:/home/ambientum/ssl
     # ports:
     #   - 8000:8000
     environment:
@@ -47,6 +48,33 @@ services:
       - web
     links:
       - db
+
+  websocket:
+    image: evaldobarbosa/thecomm-php8-nginx
+    restart: unless-stopped
+    command: php artisan websockets:serve
+    environment:
+      - PHP_MEMORY_LIMIT=256M
+      - LANG=pt_BR.UTF-8
+      - TZ=America/Fortaleza
+    volumes:
+      - ./webapp/:/var/www/app
+      - ./ssl:/home/ambientum/ssl
+    depends_on:
+      - web
+    links:
+      - db
+
+  # websocket:
+  #   image: quay.io/soketi/soketi:latest-16-alpine
+  #   restart: unless-stopped
+  #   ports:
+  #     - 6001:6001
+  #   environment:
+  #     - DEFAULT_APP_ID=TheComm123
+  #     - DEFAULT_APP_KEY=s1234
+  #     - DEFALT_APP_SECRET=5678
+  #     - SOKETI_DEBUG=1
 
   pgadmin:
     image: dpage/pgadmin4

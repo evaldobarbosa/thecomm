@@ -30,7 +30,6 @@
         <div class="col-md-8">
             <div class="alert alert-danger">
                 <h5 class="border border-bottom">Um erro aconteceu!</h5>
-                {{-- Ajuste para mostrar todos os erros de uma vez --}}
                 <ul class="list-unstyled">
                 @foreach ($errors->all() as $error)
                 <li>- {{ $error }}</li>
@@ -39,7 +38,6 @@
             </div>
         </div>
         @endif
-
 
 
         <div class="col-md-8 mt-4">
@@ -63,4 +61,16 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    Echo.channel('csv').listen('ArquivoCSVProcessado', (res) => {
+        console.log(res)
+    })
+    // Echo.private('csv.{{auth()->id()}}').listen('ArquivoCSVProcessado', (res) => {
+// window.addEventListener('load', () => {
+// })
+
+</script>
 @endsection

@@ -10,11 +10,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ArquivoCSVRecebido
+class ArquivoCSVProcessado implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $hash;
 
     /**
      * Create a new event instance.
@@ -23,7 +21,7 @@ class ArquivoCSVRecebido
      */
     public function __construct(public $arquivoCSV, public $userId)
     {
-        $this->hash = (new \App\Services\CSV\ImportacaoVendas)->novoArquivo($arquivoCSV);
+        //
     }
 
     /**
@@ -33,6 +31,20 @@ class ArquivoCSVRecebido
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        // \Log::info('usuario' . auth()->id());
+
+        // return new PrivateChannel('csv.' . $this->userId);
+        // return new Channel('csv');
+        return new PresenceChannel('csv');
     }
+
+    // public function broadcastAs()
+    // {
+    //     return 'csv-processado';
+    // }
+
+    // public function broadcastWith()
+    // {
+    //     return [ 'arquivo' => $this->arquivoCSV ];
+    // }
 }

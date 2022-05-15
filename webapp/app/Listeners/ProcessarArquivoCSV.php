@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Events\ArquivoCSVProcessado;
 
 class ProcessarArquivoCSV implements ShouldQueue
 {
@@ -31,9 +32,9 @@ class ProcessarArquivoCSV implements ShouldQueue
      */
     public function handle($event)
     {
-        \Log::info("iniciando o evento");
         $importacao = new \App\Services\CSV\ImportacaoVendas;
         $importacao->processar($event->arquivoCSV);
-        \Log::info("finalizando o evento");
+        // event( new ArquivoCSVProcessado($event->arquivoCSV, $event->userId) );
+        ArquivoCSVProcessado::dispatch($event->arquivoCSV, $event->userId);
     }
 }
