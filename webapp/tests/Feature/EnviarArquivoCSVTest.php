@@ -65,6 +65,7 @@ class EnviarArquivoCSVTest extends TestCase
         $this->actingAs($user)
             ->visitRoute("home")
             ->seeInElement("#file-ttl-00004", $file)
+            ->seeInElement("#file-vlr-00004", 'R$ 95,00')
             ->seeInElement("#file-qtd-00004", "4 registros");
     }
 }

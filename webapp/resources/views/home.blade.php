@@ -49,6 +49,7 @@
                     <h5 id="file-ttl-{{$item->id5()}}">{{$item->arquivo}}</h5>
                     <span id="file-desc-{{$item->id5()}}">Importado em {{$item->importado_em->format('d/m/Y H:i')}}</span><br>
                     @if ($item->vendas->count() > 0)
+                    <span id="file-vlr-{{$item->id5()}}">{{ $item->precoFormatado() }}</span>
                     <span id="file-qtd-{{$item->id5()}}">{{$item->vendas->count()}} registros</span>
                     @else
                     <span id="file-qtd-{{$item->id5()}}">pendente</span>

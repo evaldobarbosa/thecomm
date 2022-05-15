@@ -21,7 +21,7 @@ class Importacao extends Model
      *
      * @var array
      */
-    protected $fillable = ['arquivo', 'importado_em', 'hash'];
+    protected $fillable = ['arquivo', 'importado_em', 'hash', 'total'];
 
     protected $casts = [
         'importado_em' => 'datetime',
@@ -30,6 +30,12 @@ class Importacao extends Model
     public function id5()
     {
         return str_pad($this->id, 5, '0', STR_PAD_LEFT);
+    }
+
+    public function precoFormatado()
+    {
+        $a = new \NumberFormatter( config('app.locale'), \NumberFormatter::CURRENCY);
+        return str_replace(' ', ' ', $a->format($this->total));
     }
 
     /**

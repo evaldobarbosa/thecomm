@@ -26,6 +26,9 @@ class Venda extends Model
         $vi->venda()->associate($this);
         $vi->importacao()->associate($importacao);
         $vi->save();
+
+        $importacao->total += $this->preco * $this->quantidade;
+        $importacao->save();
     }
 
     /**

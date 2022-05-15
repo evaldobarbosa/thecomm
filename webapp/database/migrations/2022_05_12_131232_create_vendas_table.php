@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('arquivo', 50);
             $table->timestamp('importado_em');
             $table->string('hash', 40);
+            $table->float('total')->nullable();
 
             $table->timestamps();
         });
