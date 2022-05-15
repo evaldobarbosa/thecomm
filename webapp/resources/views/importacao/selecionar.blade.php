@@ -68,8 +68,6 @@ reader.onload = function (e) {
         resSize = 'kbytes'
     }
 
-    console.log(e.target)
-
     document.getElementById('file-selected-size').innerHTML = e.target.result.length + ' ' + resSize
     document.getElementById('file-selected').classList.remove("d-none")
     document.getElementById('file-select').classList.add("d-none")

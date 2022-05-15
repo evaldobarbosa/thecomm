@@ -14,10 +14,6 @@ class ImportacaoVendas
 	public function processar($hash)
 	{
 		\DB::transaction(function () use ($hash) {
-			\Log::info($hash);
-			\Log::info(hash('sha1', $hash));
-
-			// $importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
 			$importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
 
 			$reader = new CSVReader(
@@ -51,6 +47,8 @@ class ImportacaoVendas
 			}
 
 			\Log::info("Arquivo {$importacao->arquivo} importado");
+			
+			event(new \App\Events\ArquivoCSVProcessado($importacao->nome));
 		});
 	}
 
