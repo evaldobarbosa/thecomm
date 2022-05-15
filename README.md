@@ -23,7 +23,7 @@ Para este desafio está sendo utilizado o framework Laravel na versão 9. A part
 - Um evento de "upload de arquivo" que coloca numa fila uma rotina de importação
 	- Esse passo tem o intuito de deixar a interface retornar a mensagem de sucesso do upload e avisar que a importação é assíncrona
 - Uma fila que roda as rotinas importação e gera um evento de "importação finalizada com (sucesso|fracasso)"
-- Uma rotina escuta o evento de importação e retorna ao front-end a mensagem de resultado
+- Uma rotina escuta o evento de importação e envia um e-mail com a mensagem de resultado
 
 ## Os testes
 
