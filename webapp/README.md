@@ -55,13 +55,21 @@ docker-compose up -d
 - Rodando migrations
 
 ```
-docker exec thecomm_web_1 composer renew && composer setprod
+docker exec thecomm_web_1 composer renew
 ```
 
 - Rodando os testes (disponível somente em ambiente de testes/homologação)
 
 ```
 docker exec thecomm_web_1 php artisan test
+```
+
+- Alterando o ambiente para produção
+
+Nesse momento estamos trocando os valores das variáveis de ambiente APP_ENV e APP_DEBUG para 'production' e 'false' respectivamente
+
+```
+docker exec thecomm_web_1 composer setprod
 ```
 
 ### Proxy reverso
@@ -82,3 +90,26 @@ docker network create proxymng
 ```
 
 E adicionar essa rede às redes conhecidas pelo serviço 'web' existente no docker-compose.yml
+
+## Envio de e-mails
+
+Em ambiente de testes/homologação está sendo utilizado o mailhog, uma aplicação parecida com o mailtrap. Para acessá-lo basta entrar no endereço http://localhost:8026.
+
+Em ambiente de produção será necessário atualizar as variáveis de ambiente no arquivo docker-compose.yml.
+
+## Melhorias a serem feitas
+
+- Adoção de Soketi ou Laravel-Websockets para envio de mensagens em tempo real para a interface e assim poder alterá-la em tempo real.
+- Adoção de Vuejs no front-end, seja usando Inertia ou não.
+- Melhoria da classe de processamento do csv para desacoplamento dos models
+
+## Fluxo adotado para executar o teste
+- Entendimento do problema
+- Prototipação (figma)
+- Setup do laravel
+- Escrita de docker-compose
+- Escrita do código do front-end
+- Escrita de testes automatizados para o front-end utilizand laravel/browserkit-testing
+- Escrita de testes unitários para a classe que processa o arquivo
+- Reescrita de parte do código para inserção de eventos
+- Revisão do README
