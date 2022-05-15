@@ -8,6 +8,8 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\ArquivoCSVRecebido;
 use App\Listeners\ProcessarArquivoCSV;
+use App\Events\ArquivoCSVProcessado;
+use App\Listeners\NotificarProcessamentoPorEmail;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ArquivoCSVRecebido::class => [
             ProcessarArquivoCSV::class,
+        ],
+        ArquivoCSVProcessado::class => [
+            NotificarProcessamentoPorEmail::class,
         ]
     ];
 

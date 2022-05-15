@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Services\CSV\ImportacaoVendas;
+use Illuminate\Support\Facades\Storage;
 
 class ProcessamentoArquivoTest extends TestCase
 {
@@ -17,16 +18,15 @@ class ProcessamentoArquivoTest extends TestCase
      */
     public function test_arquivo_deve_ser_processado_com_sucesso()
     {
-        $csv = realpath(__DIR__ . '/../fixtures/dados.txt');
-
-        $this->adicionarCompradoresEFornecedores($csv);
+        $arquivo = $this->criaArquivo();
 
         $imp = new ImportacaoVendas;
-        $imp->processar($csv);
+        $hash = $imp->novoArquivo($arquivo);
+        $imp->processar($hash);
 
         $this->assertEquals(4, \App\Models\Venda::count());
         $this->assertEquals('João Silva', \App\Models\Venda::first()->comprador->name);
-        $this->assertEquals('dados.txt', \App\Models\Venda::first()->importacao->arquivo);
+        $this->assertEquals('dados.csv', \App\Models\Venda::first()->importacao->arquivo);
     }
 
     public function test_erro_ao_processar_colunas_erradas()
@@ -34,13 +34,29 @@ class ProcessamentoArquivoTest extends TestCase
         $this->expectException(\App\Exceptions\CSV\InvalidHeaderException::class);
         $this->expectExceptionMessage('A primeira linha não contém as colunas aguardadas');
 
-        $arq = "/tmp/colunas_ruins.txt";
+        $arquivo = $this->criaArquivo();
 
-        file_put_contents($arq, "A\tB\nFulano\tBurgão");
+        file_put_contents($arquivo, "A\tB\nFulano\tBurgão");
 
-        $csv = realpath($arq);
         $imp = new ImportacaoVendas;
-        $imp->processar($csv);
+        $hash = $imp->novoArquivo($arquivo);
+        $imp->processar($hash);
+    }
+
+    private function criaArquivo()
+    {
+        $csv = realpath(__DIR__ . '/../fixtures/dados.txt');
+        $hash = hash_file('sha1', $csv);
+
+        Storage::fake('csv');
+
+        $tempcsv = "/tmp/{$hash}.csv";
+
+        copy($csv, Storage::path('csv') . "/dados.csv");
+
+        $this->adicionarCompradoresEFornecedores($tempcsv);
+
+        return Storage::path("csv/dados.csv");
     }
 
     private function adicionarCompradoresEFornecedores($csv)

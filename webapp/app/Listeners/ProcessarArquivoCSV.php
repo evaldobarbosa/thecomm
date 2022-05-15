@@ -31,9 +31,9 @@ class ProcessarArquivoCSV implements ShouldQueue
      */
     public function handle($event)
     {
-        \Log::info("iniciando o evento");
+        // \Log::info("iniciando o evento: {$event->hash}");
         $importacao = new \App\Services\CSV\ImportacaoVendas;
-        $importacao->processar($event->arquivoCSV);
-        \Log::info("finalizando o evento");
+        $importacao->processar($event->hash);
+        // \Log::info("finalizando o evento");
     }
 }

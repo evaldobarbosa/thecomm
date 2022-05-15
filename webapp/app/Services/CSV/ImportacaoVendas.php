@@ -9,12 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class ImportacaoVendas
 {
-	// private string $csv;
 	
 	public function processar($hash)
 	{
 		\DB::transaction(function () use ($hash) {
-			$importacao = \App\Models\Importacao::where('hash', hash('sha1', $hash))->first();
+			$importacao = \App\Models\Importacao::where('hash', $hash)->first();
 
 			$reader = new CSVReader(
 				Storage::path(
@@ -48,7 +47,7 @@ class ImportacaoVendas
 
 			\Log::info("Arquivo {$importacao->arquivo} importado");
 			
-			event(new \App\Events\ArquivoCSVProcessado($importacao->nome));
+			event(new \App\Events\ArquivoCSVProcessado($importacao->arquivo));
 		});
 	}
 
@@ -65,7 +64,8 @@ class ImportacaoVendas
 
 			Storage::move(
 				"csv/" . (new SplFileInfo($csv))->getFilename(),
-				"csv/" . hash('sha1', $csv) . ".csv"
+				"csv/{$importacao->hash}.csv"
+				// "csv/" . hash('sha1', $csv) . ".csv"
 			);
 
 			\DB::commit();

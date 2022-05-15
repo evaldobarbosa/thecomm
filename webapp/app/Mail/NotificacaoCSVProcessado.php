@@ -28,7 +28,11 @@ class NotificacaoCSVProcessado extends Mailable
      */
     public function build()
     {
-        return $this->view('csv/processado')
-            ->with('arquivo', $this->arquivoCSV);
+        return $this->markdown(
+            'csv.processado',
+            [
+                'arquivo' => $this->arquivoCSV
+            ]
+        );
     }
 }

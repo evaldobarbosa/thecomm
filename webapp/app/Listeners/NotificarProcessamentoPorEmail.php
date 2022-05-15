@@ -14,7 +14,7 @@ class NotificarProcessamentoPorEmail implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(public $arquivoCSV)
+    public function __construct()
     {
         //
     }
@@ -27,8 +27,9 @@ class NotificarProcessamentoPorEmail implements ShouldQueue
      */
     public function handle($event)
     {
-        foreach(\App\Models\User::all() as $user) {
-            Mail::to($user)->send(new NotificacaoCSVProcessado($this->arquivoCSV));
+        foreach(\App\Models\User::where('tipo','usuario')->get() as $user) {
+            \Log::info("enviando arquivo para {$user->email}");
+            Mail::to($user)->send(new NotificacaoCSVProcessado($event->arquivoCSV));
         }
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ArquivoCSVProcessado implements ShouldBroadcast
+class ArquivoCSVProcessado
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,6 +22,7 @@ class ArquivoCSVProcessado implements ShouldBroadcast
     public function __construct(public $arquivoCSV)
     {
         //
+        \Log::info("ArquivoCSVProcessado {$arquivoCSV}");
     }
 
     /**

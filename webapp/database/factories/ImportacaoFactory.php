@@ -19,6 +19,7 @@ class ImportacaoFactory extends Factory
         return [
             'arquivo' => 'Arquivo ' . str()->random(3),
             'importado_em' => \Carbon\Carbon::now(),
+            'hash' => str()->random(40),
         ];
     }
 }
